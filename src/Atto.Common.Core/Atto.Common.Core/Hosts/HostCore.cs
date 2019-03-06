@@ -37,7 +37,6 @@ namespace Atto.Common.Core.Program
         private static void ConfigureServices(IServiceCollection services)
         {
             services.Replace(ServiceDescriptor.Singleton<IServiceProviderFactory<IServiceCollection>>(new ServiceProviderFactory()));
-            services.AddAutoConfigure();
         }
 
         private static void ConfigureLogging(WebHostBuilderContext webHostBuilderContext, ILoggingBuilder loggingBuilder)

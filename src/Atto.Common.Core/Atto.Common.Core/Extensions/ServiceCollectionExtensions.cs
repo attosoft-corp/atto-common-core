@@ -32,6 +32,8 @@ namespace Atto.Common.Core.Extensions
 
             services.AddDefaultSwagger(configuration);
 
+            services.AddAutoConfigure();
+
             return services;
         }
     }

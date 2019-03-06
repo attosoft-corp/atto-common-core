@@ -2,8 +2,16 @@
   <Import Project="..\..\..\config\versions.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.3</Version>
+    <Version>1.0.0-alpha</Version>
     <LangVersion>7.1</LangVersion>
+    <Authors>Renan Pereira</Authors>
+    <Company>Attosoft</Company>
+    <PackageProjectUrl>https://github.com/attosoft-corp/atto-common-core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/attosoft-corp/atto-common-core</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>common core</PackageTags>
+    <Description>This libary provides a spring boot implementation abstraction</Description>
+    <PackageReleaseNotes>this is the first version</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

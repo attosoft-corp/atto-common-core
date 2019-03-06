@@ -29,6 +29,8 @@ namespace Atto.Common.Core.Extensions
 
             app.UseDefaultSwagger();
 
+            app.UseAutoConfigure();
+
         }
     }
 }
