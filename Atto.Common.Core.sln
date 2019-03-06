@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28621.142
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atto.Common.Core", "src\Atto.Common.Core\Atto.Common.Core\Atto.Common.Core.csproj", "{DDDE0B65-4FA6-41C9-BE65-7910073D240A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atto.Common.Core.Tests", "testes\Atto.Common.Core.Tests\Atto.Common.Core.Tests.csproj", "{D06FDF0F-6C30-40E0-ABB1-D829C7DE3AE4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDDE0B65-4FA6-41C9-BE65-7910073D240A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDE0B65-4FA6-41C9-BE65-7910073D240A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDDE0B65-4FA6-41C9-BE65-7910073D240A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDDE0B65-4FA6-41C9-BE65-7910073D240A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D06FDF0F-6C30-40E0-ABB1-D829C7DE3AE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D06FDF0F-6C30-40E0-ABB1-D829C7DE3AE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D06FDF0F-6C30-40E0-ABB1-D829C7DE3AE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D06FDF0F-6C30-40E0-ABB1-D829C7DE3AE4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {805BF56B-9847-49AE-A318-0FE03928A76C}
+	EndGlobalSection
+EndGlobal
