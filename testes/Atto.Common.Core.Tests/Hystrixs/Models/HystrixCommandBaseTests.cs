@@ -96,6 +96,33 @@ namespace Atto.Common.Core.Tests.Hystrixs.Models
             result.Should().BeEquivalentTo(primaryArgs);
         }
 
-        
+        [Fact]
+        public void ExecuteAsync_ShouldExecute_MethodWithOutParametersRetuningVoid()
+        {
+            // Arrange
+
+            var mockService = new MockService();
+            var primaryArgs = new Type[] { };
+
+            MethodInfo methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodReturnsTask), primaryArgs);
+
+            var primaryFuncArgs = primaryArgs.Concat(new Type[] { methodInfo.ReturnType }).ToArray();
+
+            var primaryDelegate = methodInfo.CreateDelegate(Expression.GetDelegateType(primaryFuncArgs), mockService);
+
+            var fallbackArgs = new Type[] { typeof(HystrixFallback) };
+
+            methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodRetunsVoid), fallbackArgs);
+
+            var fallbackDelegate = methodInfo.CreateDelegate(Expression.GetActionType(fallbackArgs), mockService);
+
+            var options = MockService.GetCommandOptions(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+
+            //Act
+            var command = new HystrixCommandBase(options, primaryDelegate, fallbackDelegate, new object[] { }, _loggerFactory);
+
+            command.Execute();
+        }
+
     }
 }

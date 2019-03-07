@@ -29,7 +29,12 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
         public HystrixCommandProviderTests()
         {
             _loggerFactory = Substitute.For<ILoggerFactory>();
-            _configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            var param = new Dictionary<string, string>
+            {
+                { "hystrix:command:default:execution:isolation:thread:timeoutInMilliseconds", "60000" },
+                { "hystrix:command:default:circuitBreaker", "true" }
+            };
+            _configuration = new ConfigurationBuilder().AddInMemoryCollection(param).Build();
             _fixture = new Fixture();
 
         }
@@ -59,10 +64,10 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
         [Fact]
         public async Task ExecuteAsync_Testing_Method_WithOutParametersStatic()
         {
-            
+
             // Arrange
             var provider = CreateProvider();
-            var args = new Type[] {  };
+            var args = new Type[] { };
             var methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodObjectStatic), args);
             var mockService = new MockService();
 
@@ -173,45 +178,50 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
         }
 
         [Fact]
-        public async Task ExecuteAsync_Performance_x_OriginalCommand()
+        public void Test_performance()
         {
             var mockService = new MockService();
             var provider = new HystrixCommandProvider(_loggerFactory, _configuration);
             var options = MockService.GetCommandOptions("NormalCommand", "NormalMethod");
 
             var methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodWithoutParametersTestAsync), new Type[] { });
-            var dic = new Dictionary<int, Tuple<TimeSpan, TimeSpan>>();
 
-            var sequence = 1000;
-            for (int i = 0; i < sequence; i++)
+
+            var sequence = 10000;
+
+
+            var customCommandTasks = Enumerable.Range(0, sequence).Select(async i =>
             {
-                var stopwatch = default(Stopwatch);
-
-                stopwatch = Stopwatch.StartNew();
-                stopwatch.Start();
-                var normalcommand = new NormalHystrixCommand(options, mockService, _loggerFactory).ExecuteAsync();
-                var normalResult = await normalcommand;
-                stopwatch.Stop();
-                var ElapsedNormal = stopwatch.Elapsed;
-
-
-                stopwatch = Stopwatch.StartNew();
-                stopwatch.Start();
                 dynamic customcommand = provider.ExecuteAsync(methodInfo, mockService);
                 var customResult = await await customcommand;
-                stopwatch.Stop();
-                var ElapsedCustom = stopwatch.Elapsed;
-                if (i == 0) continue;
-                dic.Add(i, Tuple.Create(ElapsedNormal, ElapsedCustom));
+                return customResult;
+            });
+
+            var normalCommandTasks = Enumerable.Range(0, sequence).Select(i =>
+            {
+                var command = new NormalHystrixCommand(options, mockService, _loggerFactory);
+                return command.ExecuteAsync();
+            });
+
+
+
+            var stopwatch = Stopwatch.StartNew();
+            var customresult = Task.WhenAll(customCommandTasks.ToArray()).Result;
+            var customTimeElapse = stopwatch.Elapsed;
+
+            stopwatch.Reset();
+
+            stopwatch.Start();
+            var normalResult = Task.WhenAll(normalCommandTasks.ToArray()).Result;
+            var normalTimeElapse = stopwatch.Elapsed;
+
+            var dif = customTimeElapse.TotalSeconds - normalTimeElapse.TotalSeconds;
+
+            using (var writer = new StreamWriter("c:/temp/teste.log", true))
+            {
+                writer.WriteLine("Result of time: " + dif.ToString());
             }
-
-            ///Desvio de 13% do comando original
-            ///10% por conta do Delegate Call em si e 3% do method
-            var performance = dic.Values.Select(x=>new {obj = x, calc = (((x.Item2 * 100) / x.Item1) / 1000) });
-            var count = performance.Where(x => x.calc <= 0.13).Count();
-            count.Should().BeGreaterOrEqualTo(sequence / 2);
-
-
+            dif.Should().BeInRange(-2.30, 2.30);
         }
     }
 
