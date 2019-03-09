@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
 using System.IO;
 using System.Reflection;
 
@@ -27,9 +26,9 @@ namespace Atto.Common.Core.Extensions
                         }
                     });
 
-                string applicationPath = Directory.GetCurrentDirectory();
-                string applicatioName = Assembly.GetEntryAssembly().GetName().Name;
-                string caminhoXmlDoc = Path.Combine(applicationPath, $"{applicatioName}.xml");
+                var applicationPath = Directory.GetCurrentDirectory();
+                var applicatioName = Assembly.GetEntryAssembly().GetName().Name;
+                var caminhoXmlDoc = Path.Combine(applicationPath, $"{applicatioName}.xml");
                 if (File.Exists(caminhoXmlDoc))
                     c.IncludeXmlComments(caminhoXmlDoc);
             });

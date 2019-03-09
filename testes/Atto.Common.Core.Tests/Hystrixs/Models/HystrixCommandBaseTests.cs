@@ -123,6 +123,5 @@ namespace Atto.Common.Core.Tests.Hystrixs.Models
 
             command.Execute();
         }
-
     }
 }

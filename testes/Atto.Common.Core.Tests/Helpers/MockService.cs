@@ -38,7 +38,9 @@ namespace Atto.Common.Core.Tests.Helpers
 
         public static Task MethodReturnsTaskStatic() => Task.CompletedTask;
 
-        public static void MethodVoidStatic() { }
+        public static void MethodVoidStatic()
+        {
+        }
 
         public object MethodRetunsObject() => new object();
 
@@ -46,9 +48,12 @@ namespace Atto.Common.Core.Tests.Helpers
 
         public void MethodRetunsVoid() => throw new Exception();
 
-        public void MethodRetunsVoid(HystrixFallback hystrixFallback) { }
+        public void MethodRetunsVoid(HystrixFallback hystrixFallback)
+        {
+        }
 
         public Task MethodReturnsTask() => Task.CompletedTask;
+
         public Task MethodWithCancelationTokenTest(CancellationToken token) => Task.CompletedTask;
 
         public Task MethodWithCancelationTokenTest(HystrixFallback hystrixFallback, CancellationToken token) => Task.CompletedTask;
@@ -66,6 +71,7 @@ namespace Atto.Common.Core.Tests.Helpers
         public Task<IEnumerable<Type>> MethodWithParametersTestAsync(int a, string b) => Task.FromResult(MethodBase.GetCurrentMethod().GetParameters().Select(x => x.ParameterType));
 
         public Task<IEnumerable<Type>> MethodWithParametersTestAsync(HystrixFallback hystrixFallback, int a, int b) => Task.FromResult(MethodBase.GetCurrentMethod().GetParameters().Select(x => x.ParameterType));
+
         public IEnumerable<Type> MethodWithTimeoutTest(int a)
         {
             Thread.Sleep(a);
@@ -83,6 +89,7 @@ namespace Atto.Common.Core.Tests.Helpers
         public Task<IEnumerable<Type>> MethodWithTimeoutTestAsync(HystrixFallback hystrixFallback, int a) => Task.FromResult(MethodBase.GetCurrentMethod().GetParameters().Select(x => x.ParameterType));
 
         public IEnumerable<object> MethodWithGenericTypetTest() => MethodBase.GetCurrentMethod().GetParameters().Select(x => x.ParameterType);
+
         public IEnumerable<object> MethodWithGenericTypetTest(HystrixFallback hystrixFallback) => MethodBase.GetCurrentMethod().GetParameters().Select(x => x.ParameterType);
 
         [HystrixInterceptor]

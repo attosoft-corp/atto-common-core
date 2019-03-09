@@ -149,7 +149,7 @@ namespace Atto.Common.Core.Tests.Hystrixs.Models
             // Arrange
 
             var mockService = new MockService();
-            var primaryArgs = new Type[] {  };
+            var primaryArgs = new Type[] { };
 
             MethodInfo methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodWithoutParametersTestAsync), primaryArgs);
 

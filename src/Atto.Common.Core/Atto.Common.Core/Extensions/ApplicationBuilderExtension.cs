@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Pivotal.Discovery.Client;
 using Steeltoe.CircuitBreaker.Hystrix;
 
@@ -7,19 +6,9 @@ namespace Atto.Common.Core.Extensions
 {
     public static class ApplicationBuilderExtension
     {
-        public static void UseDefaultApplications(this IApplicationBuilder app, IHostingEnvironment env)
+        public static void UseAttoSoft(this IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
             app.UseHystrixRequestContext();
-
-            app.UseHttpsRedirection();
 
             app.UseDiscoveryClient();
 
@@ -30,7 +19,6 @@ namespace Atto.Common.Core.Extensions
             app.UseDefaultSwagger();
 
             app.UseAutoConfigure();
-
         }
     }
 }

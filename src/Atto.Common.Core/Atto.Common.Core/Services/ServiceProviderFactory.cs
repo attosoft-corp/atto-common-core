@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Atto.Common.Core.Hystrixs;
+using Atto.Common.Core.Hystrixs.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
@@ -32,6 +34,7 @@ namespace Atto.Common.Core.Services
 
         public IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
+            services.AddSingleton<IHystrixCommandProvider, HystrixCommandProvider>();
             return services.BuildInterceptableServiceProvider(_options.ValidateScopes);
         }
     }

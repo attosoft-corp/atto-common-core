@@ -1,8 +1,7 @@
 ﻿using Atto.Common.Core.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
 
 namespace Atto.Common.Core.Tests.Extensions
 {
@@ -18,13 +17,12 @@ namespace Atto.Common.Core.Tests.Extensions
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDefaultCollections(Configuration);
+            services.AddAttoSoft(Configuration);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            app.UseDefaultApplications(env);
+            app.UseAttoSoft();
         }
     }
-
 }

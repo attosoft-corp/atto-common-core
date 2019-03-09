@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Atto.Common.Core.Extensions
 {
@@ -27,7 +26,7 @@ namespace Atto.Common.Core.Extensions
                 {
                     var paramFunc = paramType.Concat(new Type[] { method.ReturnType }).ToArray();
                     var configDelegate = Delegate.CreateDelegate(Expression.GetFuncType(paramFunc), instance, method);
-                    services = (IServiceCollection)configDelegate.DynamicInvoke(services); 
+                    services = (IServiceCollection)configDelegate.DynamicInvoke(services);
                 }
             });
             return services;
@@ -54,9 +53,6 @@ namespace Atto.Common.Core.Extensions
                     configDelegate.DynamicInvoke(appbuilderArray.Concat(objParam).ToArray());
                 });
             });
-
         }
     }
-
-
 }

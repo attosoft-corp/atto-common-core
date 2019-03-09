@@ -13,7 +13,6 @@ namespace Atto.Common.Core.Hystrixs.Models
         private readonly Delegate _fallbackDelegate;
         private readonly object[] _arguments;
 
-
         public HystrixCommandAsyncBase(IHystrixCommandOptions commandOptions, Delegate primary, Delegate fallback, object[] arguments, ILoggerFactory loggerFactory) :
              base(commandOptions: commandOptions, logger: loggerFactory.CreateLogger<HystrixCommandAsyncBase>())
         {
@@ -43,7 +42,6 @@ namespace Atto.Common.Core.Hystrixs.Models
 
     public class HystrixCommandAsyncBase<TResult> : HystrixCommand<TResult>
     {
-
         private readonly Delegate _primaryDelegate;
         private readonly Delegate _fallbackDelegate;
         private readonly object[] _arguments;
@@ -70,7 +68,6 @@ namespace Atto.Common.Core.Hystrixs.Models
             args = args.Concat(_arguments).ToArray();
 
             return (Task<TResult>)_fallbackDelegate.DynamicInvoke(args);
-
         }
     }
 }

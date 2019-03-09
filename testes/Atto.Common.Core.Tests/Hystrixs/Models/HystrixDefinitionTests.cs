@@ -35,7 +35,6 @@ namespace Atto.Common.Core.Tests.Hystrixs.Models
             IHystrixDefinition definition = CreateHystrixDefinition(methodInfo);
             definition.HystrixBaseType.Should().Be(typeof(HystrixCommandAsyncBase));
 
-
             methodInfo = mockServiceType.GetMethod(nameof(MockService.MethodRetunsTaskObject), new Type[] { });
             definition = CreateHystrixDefinition(methodInfo);
             definition.HystrixBaseType.Should().Be(typeof(HystrixCommandAsyncBase<object>));

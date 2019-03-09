@@ -1,28 +1,20 @@
 using Atto.Common.Core.Extensions;
-using Atto.Common.Core.Program;
 using Atto.Common.Core.Tests.Extensions;
-using FluentAssertions;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace Atto.Common.Core.Tests.Hosts
 {
     public class HostCoreTests
     {
-
         [Fact]
         public void CreateWebHostBuilder_StateUnderTest_ExpectedBehavior()
         {
             var args = new string[] { };
-            string contentRoot = Directory.GetCurrentDirectory();
 
             var param = new Dictionary<string, string>
             {
@@ -33,7 +25,8 @@ namespace Atto.Common.Core.Tests.Hosts
             };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(param).Build();
 
-            var webHost = HostCore.CreateWebHostBuilder(args, contentRoot)
+            var webHost = WebHost.CreateDefaultBuilder(args)
+                .UseAttoSoft()
                 .UseConfiguration(configuration)
                 .UseEnvironment("Development")
                 .UseStartup<StartupTest>();

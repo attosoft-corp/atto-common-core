@@ -2,7 +2,7 @@
   <Import Project="..\..\..\config\versions.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.0-alpha</Version>
+    <Version>1.0.1-alpha</Version>
     <LangVersion>7.1</LangVersion>
     <Authors>Renan Pereira</Authors>
     <Company>Attosoft</Company>
@@ -18,11 +18,7 @@
 
     <PackageReference Include="Dora.Interception" Version="2.1.4" />
 
-    <PackageReference Include="Microsoft.AspNetCore" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="$(AspNetCoreVersion)" />
 
 
     <PackageReference Include="Steeltoe.CircuitBreaker.HystrixCore" Version="$(SteeltoeCircuitBreakerVersion)" />

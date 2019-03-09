@@ -31,7 +31,7 @@ namespace Atto.Common.Core.Hystrixs.Models
 
             if (!isAction)
             {
-                getType = Expression.GetFuncType;
+                getType = Expression.GetDelegateType;
                 types = types.Concat(new[] { _methodInfo.ReturnType });
             }
 
@@ -42,7 +42,7 @@ namespace Atto.Common.Core.Hystrixs.Models
         {
             if (_methodInfo == null) return null;
             if (_methodInfo.IsStatic) return Delegate.CreateDelegate(_delegateType, _methodInfo);
-            
+
             return Delegate.CreateDelegate(_delegateType, target, _methodInfo.Name);
         }
     }

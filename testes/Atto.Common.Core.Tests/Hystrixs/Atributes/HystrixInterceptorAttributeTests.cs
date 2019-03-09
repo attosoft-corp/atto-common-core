@@ -5,7 +5,6 @@ using Atto.Common.Core.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
 using Xunit;
 
 namespace Atto.Common.Core.Tests.Hystrixs.Atributes
@@ -38,7 +37,6 @@ namespace Atto.Common.Core.Tests.Hystrixs.Atributes
             var result = mockService.MethodWithInterceptAttribute();
 
             result.Should().NotBeNull();
-
         }
     }
 }

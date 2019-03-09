@@ -1,25 +1,18 @@
-using Atto.Common.Core.Program;
-using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using System;
-using System.IO;
-using Xunit;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Steeltoe.CircuitBreaker.Hystrix;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using Xunit;
 
 namespace Atto.Common.Core.Tests.Extensions
 {
     public class ServiceCollectionExtensionsTests
     {
-
         [Fact]
         public void AddDefaultCollections_StateUnderTest_ExpectedBehavior()
         {
             var args = new string[] { };
-            string contentRoot = Directory.GetCurrentDirectory();
 
             var param = new Dictionary<string, string>
             {
@@ -30,8 +23,8 @@ namespace Atto.Common.Core.Tests.Extensions
             };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(param).Build();
 
-
-            var webHost = HostCore.CreateWebHostBuilder(args, contentRoot)
+            var webHost = WebHost.CreateDefaultBuilder(args)
+                .UseAttoSoft()
                 .UseConfiguration(configuration)
                 .UseEnvironment("Development")
                 .UseStartup<StartupTest>();
@@ -39,10 +32,7 @@ namespace Atto.Common.Core.Tests.Extensions
             using (var server = new TestServer(webHost))
             using (var client = server.CreateClient())
             {
-                
             }
-
         }
     }
-
 }

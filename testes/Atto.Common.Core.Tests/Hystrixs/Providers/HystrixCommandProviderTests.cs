@@ -36,7 +36,6 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
             };
             _configuration = new ConfigurationBuilder().AddInMemoryCollection(param).Build();
             _fixture = new Fixture();
-
         }
 
         private HystrixCommandProvider CreateProvider()
@@ -64,7 +63,6 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
         [Fact]
         public async Task ExecuteAsync_Testing_Method_WithOutParametersStatic()
         {
-
             // Arrange
             var provider = CreateProvider();
             var args = new Type[] { };
@@ -178,7 +176,7 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
         }
 
         [Fact]
-        public void Test_performance()
+        public async Task Test_performance()
         {
             var mockService = new MockService();
             var provider = new HystrixCommandProvider(_loggerFactory, _configuration);
@@ -186,42 +184,114 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
 
             var methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodWithoutParametersTestAsync), new Type[] { });
 
-
-            var sequence = 10000;
-
+            var sequence = 100;
 
             var customCommandTasks = Enumerable.Range(0, sequence).Select(async i =>
             {
+                var stp = Stopwatch.StartNew();
                 dynamic customcommand = provider.ExecuteAsync(methodInfo, mockService);
-                var customResult = await await customcommand;
-                return customResult;
+                var result = await await customcommand;
+                stp.Stop();
+                return Tuple.Create(result, $"{i.ToString("00000")} : {stp.Elapsed}");
             });
 
-            var normalCommandTasks = Enumerable.Range(0, sequence).Select(i =>
+            var normalCommandTasks = Enumerable.Range(0, sequence).Select(async i =>
             {
+                var stp = Stopwatch.StartNew();
                 var command = new NormalHystrixCommand(options, mockService, _loggerFactory);
-                return command.ExecuteAsync();
+                var result = await command.ExecuteAsync();
+                stp.Stop();
+                return Tuple.Create(result, $"{i.ToString("00000")} : {stp.Elapsed}");
             });
 
+            var stopwatch = new Stopwatch();
 
-
-            var stopwatch = Stopwatch.StartNew();
+            stopwatch = Stopwatch.StartNew();
             var customresult = Task.WhenAll(customCommandTasks.ToArray()).Result;
             var customTimeElapse = stopwatch.Elapsed;
+            using (var customCommands = new StreamWriter("c:/temp/CustomCommands.log", true))
+                await customCommands.WriteAsync(customresult.Select(x => x.Item2).Aggregate((a, b) => $"{a}{Environment.NewLine}{b}"));
 
             stopwatch.Reset();
 
-            stopwatch.Start();
+            stopwatch = Stopwatch.StartNew();
             var normalResult = Task.WhenAll(normalCommandTasks.ToArray()).Result;
             var normalTimeElapse = stopwatch.Elapsed;
+            using (var normalCommands = new StreamWriter("c:/temp/NormalCommands.log", true))
+                await normalCommands.WriteAsync(normalResult.Select(x => x.Item2).Aggregate((a, b) => $"{a}{Environment.NewLine}{b}"));
 
             var dif = customTimeElapse.TotalSeconds - normalTimeElapse.TotalSeconds;
+
+            var writerCustom = new StreamWriter("c:/temp/CustomCommands.log", true);
 
             using (var writer = new StreamWriter("c:/temp/teste.log", true))
             {
                 writer.WriteLine("Result of time: " + dif.ToString());
             }
             dif.Should().BeInRange(-2.30, 2.30);
+        }
+
+        [Fact]
+        public async Task Test_performanceCustom()
+        {
+            var mockService = new MockService();
+            var provider = new HystrixCommandProvider(_loggerFactory, _configuration);
+            var options = MockService.GetCommandOptions("NormalCommand", "NormalMethod");
+
+            var methodInfo = typeof(MockService).GetMethod(nameof(MockService.MethodWithoutParametersTestAsync), new Type[] { });
+
+            await provider.ExecuteAsync(methodInfo, mockService);
+
+            var sequence = 100;
+
+            var customCommandTasks = Enumerable.Range(0, sequence).Select(async i =>
+            {
+                var stp = Stopwatch.StartNew();
+                dynamic customcommand = provider.ExecuteAsync(methodInfo, mockService);
+                var result = await await customcommand;
+                stp.Stop();
+                return Tuple.Create(result, $"{i.ToString("00000")} : {stp.Elapsed}");
+            });
+
+            var stopwatch = new Stopwatch();
+
+            stopwatch = Stopwatch.StartNew();
+            var customresult = Task.WhenAll(customCommandTasks.ToArray()).Result;
+            var normalElapsed = stopwatch.Elapsed;
+            using (var customCommands = new StreamWriter("c:/temp/customAll.log", true))
+                await customCommands.WriteAsync(customresult.Select(x => x.Item2).Aggregate((a, b) => $"{a}{Environment.NewLine}{b}"));
+
+            using (var writer = new StreamWriter("c:/temp/custom.log", true))
+                writer.WriteLine("Normal Elapse: " + normalElapsed.TotalSeconds.ToString());
+        }
+
+        [Fact]
+        public async Task Test_performanceNormal()
+        {
+            var mockService = new MockService();
+            var options = MockService.GetCommandOptions("NormalCommand", "NormalMethod");
+
+            var sequence = 100;
+
+            var normalCommandTasks = Enumerable.Range(0, sequence).Select(async i =>
+            {
+                var stp = Stopwatch.StartNew();
+                var command = new NormalHystrixCommand(options, mockService, _loggerFactory);
+                var result = await command.ExecuteAsync();
+                stp.Stop();
+                return Tuple.Create(result, $"{i.ToString("00000")} : {stp.Elapsed}");
+            });
+
+            var stopwatch = new Stopwatch();
+
+            stopwatch = Stopwatch.StartNew();
+            var customresult = Task.WhenAll(normalCommandTasks.ToArray()).Result;
+            var normalElapsed = stopwatch.Elapsed;
+            using (var customCommands = new StreamWriter("c:/temp/NormalAll.log", true))
+                await customCommands.WriteAsync(customresult.Select(x => x.Item2).Aggregate((a, b) => $"{a}{Environment.NewLine}{b}"));
+
+            using (var writer = new StreamWriter("c:/temp/normal.log", true))
+                writer.WriteLine("Normal Elapse: " + normalElapsed.TotalSeconds.ToString());
         }
     }
 

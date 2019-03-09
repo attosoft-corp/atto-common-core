@@ -1,15 +1,9 @@
-using Atto.Common.Core.Extensions;
-using Atto.Common.Core.Program;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
-using NSubstitute;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,19 +11,14 @@ namespace Atto.Common.Core.Tests.Extensions
 {
     public class SwaggerExtensionTests
     {
-
-
         public SwaggerExtensionTests()
         {
-
         }
-
 
         [Fact]
         public async Task TestSwagger()
         {
             var args = new string[] { };
-            string contentRoot = Directory.GetCurrentDirectory();
 
             var param = new Dictionary<string, string>
             {
@@ -40,8 +29,7 @@ namespace Atto.Common.Core.Tests.Extensions
             };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(param).Build();
 
-
-            var webHost = HostCore.CreateWebHostBuilder(args, contentRoot)
+            var webHost = WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(configuration)
                 .UseEnvironment("SwaggerTest")
                 .UseStartup<StartupTest>();

@@ -23,6 +23,7 @@ namespace Atto.Common.Core.Interceptors
             using (var scope = _logger.BeginScope("begin hystrix command for class {0} and method:{1}", methodInfo.ReflectedType, methodInfo.Name))
             {
                 var result = _hystrixCommandProvider.ExecuteAsync(methodInfo, context.Target, context.Arguments);
+
                 context.ReturnValue = await result;
             }
         }
