@@ -175,7 +175,7 @@ namespace Atto.Common.Core.Tests.Hystrixs.Providers
             await Task.Yield();
         }
 
-        [Fact]
+        [Fact(Skip ="Performance run locally")]
         public async Task Test_performance()
         {
             var mockService = new MockService();
